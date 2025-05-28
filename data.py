@@ -147,5 +147,3 @@ if __name__ == "__main__":
     window = Tk()
     obj = RMS(window)
     window.mainloop()
-
-#pyinstaller login.py --onefile
