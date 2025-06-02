@@ -57,3 +57,4 @@ All data is stored using **SQLite3**, ensuring lightweight and efficient data st
 ```bash
 https://github.com/AdiWork933/Collage-Data-management.git
 cd collage_data_management
+python main.py
