@@ -1,4 +1,4 @@
-# Collage Data Management (Still in Updating all thing please wait for final)
+# Collage Data Management (Still in Updating all thing please wait for final project)
 
 **Collage Data Management** is a comprehensive Python-based application designed for managing course details, student information, and academic results in a college environment. This GUI-based system is built using Tkinter for the user interface and SQLite3 for database management. It also includes a machine learning feature to predict student performance.
 
