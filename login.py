@@ -75,7 +75,7 @@ class Login_page:
             if row:
                 if self.password.get() == row[7]:  # Assuming password is at index 6 in your database
                     self.window.destroy()
-                    os.system("python data.py")
+                    os.system("python main_page.py")
                 else:
                     messagebox.showinfo("Info", "Incorrect password", parent=self.window)
             else:
