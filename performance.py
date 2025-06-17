@@ -73,7 +73,7 @@ class ResultClass:
     def go_home(self):
         if messagebox.askyesno("Confirm", "Do you really want to go Home?", parent=self.window):
             self.window.destroy()
-            os.system("python data.py")
+            os.system("python main_page.py")
 
     def get_student_data(self, roll, phone):
         con = sqlite3.connect("rms.db")
