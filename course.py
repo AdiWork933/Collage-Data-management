@@ -98,7 +98,7 @@ class CourseClass:
         op=messagebox.askyesno("Confirm","Do you really want to go Home?",parent=self.window)
         if op==True:
             self.window.destroy()
-            os.system("python data.py")
+            os.system("python main_page.py")
     def get_data(self, ev): #   ev -->Enviroment vatiable
 
         r = self.Coursetable.focus()
