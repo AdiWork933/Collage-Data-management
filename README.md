@@ -1,4 +1,4 @@
-# Collage Data Management (Still in Updating all thing please wait for final project)
+# Collage Data Management
 
 **Collage Data Management** is a comprehensive Python-based application designed for managing course details, student information, and academic results in a college environment. This GUI-based system is built using Tkinter for the user interface and SQLite3 for database management. It also includes a machine learning feature to predict student performance.
 
@@ -45,10 +45,10 @@ All data is stored using **SQLite3**, ensuring lightweight and efficient data st
 
 ## 🛠️ Tech Stack
 
-- **Programming Language**: Python 3.x  
+- **Programming Language**: Python 3.10 or above 
 - **GUI Framework**: Tkinter  
 - **Database**: SQLite3  
-- **Machine Learning**: Scikit-learn / TensorFlow / Keras (as needed for the prediction module)
+- **Machine Learning**: Scikit-learn (Further shift another model)
 
 ## 🏗️ Setup & Usage
 
@@ -57,4 +57,5 @@ All data is stored using **SQLite3**, ensuring lightweight and efficient data st
 ```bash
 https://github.com/AdiWork933/Collage-Data-management.git
 cd collage_data_management
+pip install -r requirements.txt
 python main.py
