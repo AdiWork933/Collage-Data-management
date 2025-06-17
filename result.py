@@ -4,7 +4,6 @@ from PIL import Image, ImageTk
 import sqlite3
 import os
 
-
 class ResultClass:
     def __init__(self, window):
         self.window = window
@@ -15,12 +14,11 @@ class ResultClass:
         self.window.resizable(False, False)
 
         #   TITLE
-
-        title = Label(self.window, text="Add Student Result", font=("goudy ols style", 20, "bold"), bg="orange",fg="#262626")
+        title = Label(self.window, text="Add Student Result", font=("goudy old style", 20, "bold"), bg="orange", fg="#262626")
         title.place(x=10, y=15, width=1180, height=50)
 
-        #   VARIABLE DECLEARATION
-
+        #   VARIABLE DECLARATION
+        self.var_dept = StringVar()
         self.var_roll = StringVar()
         self.var_name = StringVar()
         self.var_course = StringVar()
@@ -28,85 +26,94 @@ class ResultClass:
         self.CA2 = StringVar()
         self.CA3 = StringVar()
         self.CA4 = StringVar()
+
+        self.department_list = self.fetch_departments()
         self.roll_list = []
-        self.fetch_roll()
 
-        #   LABEL
+        #   LABELS
+        Label(self.window, text="Select Department", font=("goudy old style", 20, "bold"), bg="white").place(x=50, y=80)
+        Label(self.window, text="Select Student", font=("goudy old style", 20, "bold"), bg="white").place(x=50, y=130)
+        Label(self.window, text="Name", font=("goudy old style", 20, "bold"), bg="white").place(x=50, y=180)
+        Label(self.window, text="Course", font=("goudy old style", 20, "bold"), bg="white").place(x=50, y=230)
+        Label(self.window, text="CA1", font=("goudy old style", 20, "bold"), bg="white").place(x=50, y=280)
+        Label(self.window, text="CA2", font=("goudy old style", 20, "bold"), bg="white").place(x=350, y=280)
+        Label(self.window, text="CA3", font=("goudy old style", 20, "bold"), bg="white").place(x=50, y=330)
+        Label(self.window, text="CA4", font=("goudy old style", 20, "bold"), bg="white").place(x=350, y=330)
 
-        lbl_select = Label(self.window, text="Select Student", font=("goudy old style", 20, "bold"), bg="white")
-        lbl_select.place(x=50, y=100)
-        lbl_name = Label(self.window, text="Name", font=("goudy old style", 20, "bold"), bg="white")
-        lbl_name.place(x=50, y=160)
-        lbl_course = Label(self.window, text="Course", font=("goudy old style", 20, "bold"), bg="white")
-        lbl_course.place(x=50, y=220)
-        lbl_CA1 = Label(self.window, text="CA1", font=("goudy old style", 20, "bold"), bg="white")
-        lbl_CA1.place(x=50, y=280)
-        lbl_CA2 = Label(self.window, text="CA2", font=("goudy old style", 20, "bold"), bg="white")
-        lbl_CA2.place(x=350, y=280)
-        lbl_CA3 = Label(self.window, text="CA3", font=("goudy old style", 20, "bold"), bg="white")
-        lbl_CA3.place(x=50, y=340)
-        lbl_CA4 = Label(self.window, text="CA4", font=("goudy old style", 20, "bold"), bg="white")
-        lbl_CA4.place(x=350, y=340)
+        #   COMBO BOXES
+        self.combo_dept = ttk.Combobox(self.window, textvariable=self.var_dept, values=self.department_list,
+                                       font=("goudy old style", 15), state='readonly', justify='center')
+        self.combo_dept.place(x=280, y=80, width=200)
+        self.combo_dept.set("Select")
+        self.combo_dept.bind("<<ComboboxSelected>>", self.on_dept_select)
 
-        #   COMBO BOX
+        self.combo_roll = ttk.Combobox(self.window, textvariable=self.var_roll,
+                                       font=("goudy old style", 15), state='readonly', justify='center')
+        self.combo_roll.place(x=280, y=130, width=150)
+        self.combo_roll.set("Select")
 
-        self.txt_student = ttk.Combobox(self.window, textvariable=self.var_roll, values=self.roll_list,font=("goudy old style", 20, "bold"), state='readonly', justify="center")
-        self.txt_student.place(x=280, y=100, width=150)
-        self.txt_student.set("Select")
+        Button(self.window, text="Search", font=("goudy old style", 15, "bold"), bg="#03a9f4", fg="white",
+               cursor="hand2", command=self.search).place(x=480, y=130, width=120, height=35)
 
-        #   SEARCH BUTTON
-
-        lbl_search = Button(self.window, text="Search", font=("goudy old style", 15, "bold"), bg="#03a9f4", fg="white",cursor="hand2", command=self.search)
-        lbl_search.place(x=480, y=100, width=120, height=35)
-
-        #   ENTRY FILD
-
-        self.txt_name = Entry(self.window, textvariable=self.var_name, font=("goudy old style", 20, "bold"),state="readonly", bg="lightyellow")
-        self.txt_name.place(x=280, y=160, width=320)
-        self.txt_course = Entry(self.window, textvariable=self.var_course, font=("goudy old style", 20, "bold"),state="readonly", bg="lightyellow")
-        self.txt_course.place(x=280, y=220, width=320)
-        self.CA1_entry = Entry(self.window, textvariable=self.CA1, font=("goudy old style", 20, "bold"),bg="lightyellow")
-        self.CA1_entry.place(x=180, y=280, width=150)
-        self.CA2_entry = Entry(self.window, textvariable=self.CA2, font=("goudy old style", 20, "bold"),bg="lightyellow")
-        self.CA2_entry.place(x=460, y=280, width=150)
-        self.CA3_entry = Entry(self.window, textvariable=self.CA3, font=("goudy old style", 20, "bold"),bg="lightyellow")
-        self.CA3_entry.place(x=180, y=340, width=150)
-        self.CA4_entry = Entry(self.window, textvariable=self.CA4, font=("goudy old style", 20, "bold"),bg="lightyellow")
-        self.CA4_entry.place(x=460, y=340, width=150)
+        #   ENTRIES
+        Entry(self.window, textvariable=self.var_name, font=("goudy old style", 20, "bold"),
+              state="readonly", bg="lightyellow").place(x=280, y=180, width=320)
+        Entry(self.window, textvariable=self.var_course, font=("goudy old style", 20, "bold"),
+              state="readonly", bg="lightyellow").place(x=280, y=230, width=320)
+        Entry(self.window, textvariable=self.CA1, font=("goudy old style", 20, "bold"),
+              bg="lightyellow").place(x=180, y=280, width=150)
+        Entry(self.window, textvariable=self.CA2, font=("goudy old style", 20, "bold"),
+              bg="lightyellow").place(x=460, y=280, width=150)
+        Entry(self.window, textvariable=self.CA3, font=("goudy old style", 20, "bold"),
+              bg="lightyellow").place(x=180, y=330, width=150)
+        Entry(self.window, textvariable=self.CA4, font=("goudy old style", 20, "bold"),
+              bg="lightyellow").place(x=460, y=330, width=150)
 
         #   BUTTONS
-
-        self.btn_submit = Button(self.window, text="Submit", font=("goudy old style", 20, "bold"), bg="lightgreen",activebackground="lightgreen", cursor="hand2", command=self.add)
-        self.btn_submit.place(x=50, y=420, width=120, height=35)
-        self.btn_clear = Button(self.window, text="Clear", font=("goudy old style", 20, "bold"), bg="lightgray",activebackground="lightgray", cursor="hand2", command=self.clear_fields)
-        self.btn_clear.place(x=350, y=420, width=120, height=35)
-        self.btn_update = Button(self.window, text="Update", font=("goudy old style", 20, "bold"), bg="#4caf50",cursor="hand2", command=self.update_result)
-        self.btn_update.place(x=200, y=420, width=120, height=35)
-        self.btn_home = Button(self.window, text="Home", font=("goudy old style", 20, "bold"), bg="#FDFF5A",cursor="hand2", command=self.go_home)
-        self.btn_home.place(x=500, y=420, width=120, height=35)
+        Button(self.window, text="Submit", font=("goudy old style", 20, "bold"),
+               bg="lightgreen", activebackground="lightgreen", cursor="hand2", command=self.add).place(x=50, y=390, width=120, height=35)
+        Button(self.window, text="Update", font=("goudy old style", 20, "bold"),
+               bg="#4caf50", cursor="hand2", command=self.update_result).place(x=200, y=390, width=120, height=35)
+        Button(self.window, text="Clear", font=("goudy old style", 20, "bold"),
+               bg="lightgray", activebackground="lightgray", cursor="hand2", command=self.clear_fields).place(x=350, y=390, width=120, height=35)
+        Button(self.window, text="Home", font=("goudy old style", 20, "bold"),
+               bg="#FDFF5A", cursor="hand2", command=self.go_home).place(x=500, y=390, width=120, height=35)
 
         #   IMAGE
-
         self.label_image = Image.open("image/result.jpg")
         self.label_image_resized = self.label_image.resize((500, 300))
         self.label_image_tk = ImageTk.PhotoImage(self.label_image_resized)
         self.label_image_widget = Label(self.window, image=self.label_image_tk)
         self.label_image_widget.place(x=630, y=100)
 
-    def fetch_roll(self):
-        con = sqlite3.connect(database="rms.db")
+    def fetch_departments(self):
+        con = sqlite3.connect("rms.db")
         cur = con.cursor()
         try:
-            cur.execute("SELECT roll FROM student")
-            rows = cur.fetchall()
-            self.roll_list = [row[0] for row in rows]
-        except sqlite3.Error as e:
-            messagebox.showerror("Error", f"Error fetching roll numbers: {str(e)}")
+            cur.execute("SELECT DISTINCT course FROM student")
+            departments = [row[0] for row in cur.fetchall()]
+            return departments
+        except Exception as e:
+            messagebox.showerror("Error", f"Error fetching departments: {e}")
+            return []
+        finally:
+            con.close()
+
+    def on_dept_select(self, event):
+        self.roll_list.clear()
+        con = sqlite3.connect("rms.db")
+        cur = con.cursor()
+        try:
+            cur.execute("SELECT roll FROM student WHERE course=?", (self.var_dept.get(),))
+            self.roll_list = [row[0] for row in cur.fetchall()]
+            self.combo_roll.config(values=self.roll_list)
+        except Exception as e:
+            messagebox.showerror("Error", f"Error fetching roll numbers: {e}")
         finally:
             con.close()
 
     def search(self):
-        con = sqlite3.connect(database="rms.db")
+        con = sqlite3.connect("rms.db")
         cur = con.cursor()
         try:
             cur.execute("SELECT name, course FROM student WHERE roll=?", (self.var_roll.get(),))
@@ -114,8 +121,6 @@ class ResultClass:
             if row:
                 self.var_name.set(row[0])
                 self.var_course.set(row[1])
-
-                # Fetching the saved results
                 cur.execute("SELECT CA1, CA2, CA3, CA4 FROM result WHERE roll=?", (self.var_roll.get(),))
                 result_row = cur.fetchone()
                 if result_row:
@@ -129,57 +134,39 @@ class ResultClass:
                     self.CA3.set("")
                     self.CA4.set("")
             else:
-                messagebox.showinfo("Info", "No record found", parent=self.window)
-        except sqlite3.Error as e:
-            messagebox.showerror("Error", f"Error searching student: {str(e)}")
+                messagebox.showinfo("Info", "No student record found", parent=self.window)
+        except Exception as e:
+            messagebox.showerror("Error", f"Search error: {e}")
         finally:
             con.close()
 
     def add(self):
         if not self.var_name.get():
-            messagebox.showerror("Error", "Please first search for student name", parent=self.window)
+            messagebox.showerror("Error", "Please first search for student", parent=self.window)
             return
-
-        con = sqlite3.connect(database="rms.db")
+        con = sqlite3.connect("rms.db")
         cur = con.cursor()
         try:
             cur.execute("SELECT * FROM result WHERE roll=?", (self.var_roll.get(),))
-            row = cur.fetchone()
-            if row:
+            if cur.fetchone():
                 messagebox.showerror("Error", "Result already present", parent=self.window)
-            else:
-                cur.execute("INSERT INTO result (roll, name, course, CA1, CA2, CA3, CA4) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                            (self.var_roll.get(),
-                             self.var_name.get(),
-                             self.var_course.get(),
-                             self.CA1.get(),
-                             self.CA2.get(),
-                             self.CA3.get(),
-                             self.CA4.get()))
-                con.commit()
-                messagebox.showinfo("Success", "Result added successfully", parent=self.window)
-                self.clear_fields()
-                self.fetch_roll()
-        except sqlite3.Error as e:
-            messagebox.showerror("Error", f"Database error: {str(e)}", parent=self.window)
+                return
+            cur.execute("INSERT INTO result (roll, name, course, CA1, CA2, CA3, CA4) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                        (self.var_roll.get(), self.var_name.get(), self.var_course.get(),
+                         self.CA1.get(), self.CA2.get(), self.CA3.get(), self.CA4.get()))
+            con.commit()
+            messagebox.showinfo("Success", "Result added successfully", parent=self.window)
+            self.clear_fields()
+        except Exception as e:
+            messagebox.showerror("Error", f"Add error: {e}")
         finally:
             con.close()
 
-    def clear_fields(self):
-        self.var_roll.set("")
-        self.var_name.set("")
-        self.var_course.set("")
-        self.CA1.set("")
-        self.CA2.set("")
-        self.CA3.set("")
-        self.CA4.set("")
-
     def update_result(self):
         if not self.var_name.get():
-            messagebox.showerror("Error", "Please first search for student name", parent=self.window)
+            messagebox.showerror("Error", "Please first search for student", parent=self.window)
             return
-
-        con = sqlite3.connect(database="rms.db")
+        con = sqlite3.connect("rms.db")
         cur = con.cursor()
         try:
             cur.execute("UPDATE result SET CA1=?, CA2=?, CA3=?, CA4=? WHERE roll=?",
@@ -187,33 +174,29 @@ class ResultClass:
             con.commit()
             messagebox.showinfo("Success", "Result updated successfully", parent=self.window)
             self.clear_fields()
-            self.fetch_roll()
-        except sqlite3.Error as e:
-            messagebox.showerror("Error", f"Database error: {str(e)}", parent=self.window)
+        except Exception as e:
+            messagebox.showerror("Error", f"Update error: {e}")
         finally:
             con.close()
+
+    def clear_fields(self):
+        self.var_dept.set("Select")
+        self.var_roll.set("Select")
+        self.var_name.set("")
+        self.var_course.set("")
+        self.CA1.set("")
+        self.CA2.set("")
+        self.CA3.set("")
+        self.CA4.set("")
+        self.combo_roll.config(values=[])
 
     def go_home(self):
         if messagebox.askyesno("Confirm", "Do you really want to go Home?", parent=self.window):
             self.window.destroy()
-            os.system("python data.py")
+            os.system("python main_page.py")
 
-    def display_results(self):
-        self.tree.delete(*self.tree.get_children())
-        con = sqlite3.connect(database="rms.db")
-        cur = con.cursor()
-        try:
-            cur.execute("SELECT * FROM result")
-            rows = cur.fetchall()
-            for row in rows:
-                self.tree.insert("", "end", values=row)
-        except sqlite3.Error as e:
-            messagebox.showerror("Error", f"Error displaying results: {str(e)}")
-        finally:
-            con.close()
 
-#   GUI RUN SECTION
-
+# GUI RUN
 if __name__ == "__main__":
     window = Tk()
     obj = ResultClass(window)
