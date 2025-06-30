@@ -59,3 +59,6 @@ https://github.com/AdiWork933/Collage-Data-management.git
 cd collage_data_management
 pip install -r requirements.txt
 python main.py
+```
+
+The previous name of this project was **Student Management System**. For more details, [click here](https://www.linkedin.com/posts/aditya-choudhary-312a11302_updated-and-enhanced-a-previous-project-by-activity-7273294979555328000-xP9q?utm_source=share&utm_medium=member_android&rcm=ACoAAE1kcX4BF02nRsPHZ0Xu2W66RXmgsfekUa4).
